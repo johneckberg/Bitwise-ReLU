@@ -8,15 +8,21 @@ In this project, we take the most famous of activation functions and give it a c
 
 ## Bitwise ReLU
 
-Our bitwise ReLU implementation uses bit manipulation on floating-point numbers, which, let's be honest, is a bit of a hack. But what's life without a little bit of mischief?
+Our bitwise ReLU implementation converts it to a an int representation which is awful, but this whole thing is. 
 
 ```python
-def relu(input_float):
-    int_representation = np.float32(input_float).view('int32')
+def relu(input_data):
+    int_representation = input_data.int()
+
+    # Create a mask that has all bits set if the sign bit is set,
+    # and all bits clear if the sign bit is not set
     mask = (int_representation >> 31)
+
+    # Use the mask to conditionally zero out negative numbers
     masked_representation = int_representation & ~mask
-    masked_representation = np.int32(masked_representation).view('float32')
-    return masked_representation
+
+    # Convert the masked integer representation back to a float
+    output_data = masked_representation.float()
 ```
 
 ## Speed Comparison
@@ -37,6 +43,4 @@ The results? Well, we'll let you run the code and find out. But be warned, the t
 
 ## A Note on Practicality
 
-While our bitwise ReLU implementation may very well be an amusing diversion, we must remind you that the standard way to implement ReLU in both numpy and PyTorch is to use the `np.maximum` or `torch.clamp_min` functions, respectively. They are reliable, well-tested, and do not rely on bit manipulation hacks.
-
-But if you're in the mood for a bit of fun, go ahead and give our bitwise ReLU a whirl.
+While our bitwise ReLU implementation may very well be an amusing diversion, we must remind you that the standard way to implement ReLU in both numpy and PyTorch is to use the `np.maximum` or `torch.clamp_min` functions, respectively. They are reliable, well-tested, and do not rely on bit manipulation hacks. If you want speed, dont use python.
